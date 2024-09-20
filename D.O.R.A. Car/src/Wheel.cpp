@@ -4,7 +4,7 @@
 volatile long Wheel::rawEncoderCount = 0;
 Wheel *Wheel::instance = nullptr;
 
-// Constructor
+
 Wheel::Wheel(int motorPin1, int motorPin2, int speedControlPin,
              int interruptEncoderPin, int confermationEncoderPin,
              double Kp, double Ki, double Kd, double setpoint)
@@ -40,7 +40,6 @@ Wheel::~Wheel()
     }
 }
 
-// Static interrupt service routine to update raw encoder count
 void Wheel::UpdateEncoder()
 {
     if (instance != nullptr)

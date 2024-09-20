@@ -21,6 +21,15 @@ enum CarState
     DIAGONAL_DRIVING
 };
 
+/**
+ * @class Car
+ * @brief Represents a car with four wheels, each controlled by a motor and encoder, and managed using PID control.
+ * 
+ * The Car class encapsulates the functionality to control a car's movement, including forward, reverse, sideways, and diagonal driving.
+ * Each wheel has its own motor pins, speed control pin, encoder pins, and PID constants.
+ * 
+ * @note The current implementation has PID constants and setpoints initialized for the top left wheel only.
+ */
 class Car
 {
 private:
@@ -97,15 +106,65 @@ private:
     Wheel bottomRightWheel;
 
 public:
+    /**
+     * @brief Constructs a new Car object.
+     * 
+     * This is the default constructor for the Car class.
+     */
     Car();
+
+    /**
+     * @brief Destroys the Car object.
+     * 
+     * This is the destructor for the Car class.
+     */
     ~Car();
 
+    /**
+     * @brief Initializes the car by initializing each wheel.
+     * 
+     * This method initializes each wheel by calling the InitWheel method for each wheel.
+     */
     CarState CurrentState = STATIONARY;
-    void InitCar();
+
+
+    /**
+     * @brief Drives the car forward.
+     *
+     * This function initiates the forward movement of the car.
+     * It controls the necessary mechanisms to move the car in a forward direction.
+     */
     void ForwardDrive();
+
+    /**
+     * @brief Drives the car in reverse.
+     *
+     * This function initiates the reverse movement of the car.
+     * It controls the necessary mechanisms to move the car in a reverse direction.
+     */
     void ReverseDrive();
+
+    /**
+     * @brief Drives the car sideways.
+     *
+     * This function initiates the sideways movement of the car.
+     * It controls the necessary mechanisms to move the car sideways.
+     */
     void SidewaysDrive();
+
+    /**
+     * @brief Drives the car diagonally.
+     *
+     * This function initiates the diagonal movement of the car.
+     * It controls the necessary mechanisms to move the car diagonally.
+     */
     void DiagonalDrive();
+
+    /**
+     * @brief Stops the car.
+     *
+     * This function stops the car by stopping all wheels.
+     */
     void StopCar();
 };
 

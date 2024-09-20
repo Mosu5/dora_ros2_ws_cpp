@@ -4,31 +4,63 @@
 #include <Arduino.h>
 #include <PID_v1.h>
 
+/**
+ * @file Wheel.h
+ * @brief Definition of the Wheel class for controlling a motorized wheel with PID control.
+ */
 class Wheel
 {
 public:
-    // Constructor
+    /**
+     * @brief Constructs a new Wheel object.
+     *
+     * @param motorPin1 The pin number for the first motor control.
+     * @param motorPin2 The pin number for the second motor control.
+     * @param speedControlPin The pin number for speed control.
+     * @param interruptEncoderPin The pin number for the interrupt encoder.
+     * @param confermationEncoderPin The pin number for the confirmation encoder.
+     * @param Kp The proportional gain for the PID controller.
+     * @param Ki The integral gain for the PID controller.
+     * @param Kd The derivative gain for the PID controller.
+     * @param setpoint The desired setpoint for the PID controller.
+     */
     Wheel(int motorPin1, int motorPin2, int speedControlPin,
-          int interruptEncoderPin, int confermationEncoderPin,
-          double Kp, double Ki, double Kd, double setpoint);
+             int interruptEncoderPin, int confermationEncoderPin,
+             double Kp, double Ki, double Kd, double setpoint);
 
-    // Destructor to clean up dynamic memory
+    /**
+     * @brief Destroy the Wheel object
+     *
+     */
     ~Wheel();
 
-    // Methods
-    void InitWheel();
+    /**
+     * @brief Set the Servo object
+     *
+     * @param activateMotorPin1 Activate the first motor pin.
+     * @param activateMotorPin2 Activate the second motor pin.
+     */
     void SetServo(bool activateMotorPin1, bool activateMotorPin2);
 
-    // Static interrupt service routine
+    /**
+     * @brief Update the encoder count.
+     *
+     */
     static void UpdateEncoder();
 
 private:
-    int motorPin1, motorPin2, speedControlPin;
-    int interruptEncoderPin, confermationEncoderPin;
+    int motorPin1;
+    int motorPin2;
+    int speedControlPin;
+
+    int interruptEncoderPin;
+    int confermationEncoderPin;
+
     double Kp, Ki, Kd, setpoint;
-    volatile long encoderCount;  // Change to volatile for ISR use
-    double encoderCountAsDouble; // Store encoder count as double for PID
+    volatile long encoderCount;
+    double encoderCountAsDouble;
     double PIDOutput;
+
     PID *moterPID;
 
     static Wheel *instance; // Static pointer to the instance of the class
