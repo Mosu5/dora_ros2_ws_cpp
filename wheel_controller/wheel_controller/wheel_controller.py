@@ -15,9 +15,9 @@ class HolonomicWheelController(Node):
         self.serial_port = serial.Serial('/dev/ttyS0', 9600, timeout=1)
         
         # Parameters for wheel base
-        self.wheel_radius = 0.1  # meters (radius of the wheels)
-        self.L = 0.5  # Length between front and rear wheels
-        self.W = 0.3  # Width between left and right wheels
+        self.wheel_radius = 0.08  # meters (radius of the wheels)
+        self.L = 0.153  # Length between front and rear wheels
+        self.W = 0.362  # Width between left and right wheels
 
     def cmd_vel_callback(self, msg: Twist):
         # Extract the linear and angular velocity from the Twist message
