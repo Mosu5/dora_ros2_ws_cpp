@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
+import serial
 
 class HolonomicWheelController(Node):
     def __init__(self):
@@ -11,6 +12,7 @@ class HolonomicWheelController(Node):
             'cmd_vel',
             self.cmd_vel_callback,
             10)
+        self.serial_port = serial.Serial('/dev/ttyS0', 9600, timeout=1)
         
         # Parameters for wheel base
         self.wheel_radius = 0.1  # meters (radius of the wheels)
@@ -28,6 +30,8 @@ class HolonomicWheelController(Node):
         
         # Log the wheel velocities
         self.get_logger().info(f'FL: {v_fl:.2f}, FR: {v_fr:.2f}, RL: {v_rl:.2f}, RR: {v_rr:.2f} (rad/s)')
+        self.get_logger().info('Sending wheel velocities to the robot')
+        self.serial_port.write(f'{v_fl:.2f},{v_fr:.2f},{v_rl:.2f},{v_rr:.2f}\n'.encode())
 
     def compute_wheel_velocities(self, vx, vy, wz):
         # Mecanum wheel inverse kinematics formula
