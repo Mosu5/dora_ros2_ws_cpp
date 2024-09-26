@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -e 
+
 sudo chmod 666 /dev/ttyS0 &
 sudo chmod 666 /dev/ttyUSB0 &
 ros2 launch slam_toolbox online_async_launch.py & 
