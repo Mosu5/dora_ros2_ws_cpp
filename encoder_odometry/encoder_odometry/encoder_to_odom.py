@@ -2,25 +2,28 @@
 
 import rclpy
 from rclpy.node import Node
-import serial
+import serial  # To handle serial communication
 from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Pose, Twist
-from tf_transformations import quaternion_from_euler  # Import from tf_transformations for ROS2
+from geometry_msgs.msg import TransformStamped, Quaternion
+from tf_transformations import quaternion_from_euler
 import math
-from rclpy.time import Time
+import tf2_ros
 
-class HolonomicOdomPublisher(Node):
+
+class MecanumOdometry(Node):
     def __init__(self):
-        super().__init__('holonomic_odom_publisher')
+        super().__init__('mecanum_odometry')
 
         # Parameters
-        self.port = self.declare_parameter('port', '/dev/ttyUSB0').value
-        self.baudrate = self.declare_parameter('baudrate', 9600).value
-        self.wheel_radius = self.declare_parameter('wheel_radius', 0.08).value  # 8 cm radius
-        self.wheel_base_length = self.declare_parameter('wheel_base_length', 0.153).value  # 15.3 cm base length
-        self.wheel_base_width = self.declare_parameter('wheel_base_width', 0.362).value  # 36.2 cm base width
+        self.wheel_radius = 0.08  # 8 cm radius
+        self.wheel_base_length = 0.153  # 15.3 cm base length
+        self.wheel_base_width = 0.362  # 36.2 cm base width
 
-        # Open the serial connection
+        # Serial communication settings (adjust port and baudrate)
+        self.port = self.declare_parameter('port', '/dev/ttyUSB0').value  # Update to your actual Arduino port
+        self.baudrate = self.declare_parameter('baudrate', 9600).value  # Adjust baudrate to match Arduino
+
+        # Open the serial connection to Arduino
         self.ser = serial.Serial(self.port, self.baudrate, timeout=1)
 
         # Variables to store position and orientation
@@ -35,22 +38,28 @@ class HolonomicOdomPublisher(Node):
         # Odometry publisher
         self.odom_pub = self.create_publisher(Odometry, 'odom', 50)
 
+        # TF Broadcasters
+        self.tf_broadcaster = tf2_ros.TransformBroadcaster(self)
+        self.static_tf_broadcaster = tf2_ros.StaticTransformBroadcaster(self)
+
         # Timer to regularly call the update function
-        self.create_timer(0.1, self.publish_odometry)  # 10 Hz update rate
+        self.create_timer(0.1, self.update_odometry)  # 10 Hz update rate
+
+        # Broadcast static transform from base_link to laser
+        self.broadcast_static_tf()
 
     def read_wheel_data(self):
         """
-        Read the encoder data from all four wheels via serial.
-        The Arduino should be sending the encoder values for all four wheels in a specific format.
+        Read encoder data from Arduino via serial communication.
+        The Arduino is expected to send data in the format: 'wheel1,wheel2,wheel3,wheel4\n'.
         """
         try:
-            if self.ser.in_waiting > 0:
-                line = self.ser.readline().decode('utf-8').strip()
-                # Expecting data in the format: "wheel1,wheel2,wheel3,wheel4"
-                wheel_data = [int(x) for x in line.split(',')]
+            if self.ser.in_waiting > 0:  # Check if data is available
+                line = self.ser.readline().decode('utf-8').strip()  # Read and decode the serial data
+                wheel_data = [int(x) for x in line.split(',')]  # Convert the received string to integers
                 return wheel_data
             else:
-                return None
+                return None  # No data available
         except Exception as e:
             self.get_logger().error(f"Error reading serial data: {e}")
             return None
@@ -63,7 +72,7 @@ class HolonomicOdomPublisher(Node):
 
         # Update current time and compute delta time
         current_time = self.get_clock().now()
-        delta_time = (current_time - self.last_time).nanoseconds / 1e9
+        delta_time = (current_time - self.last_time).nanoseconds / 1e9  # Convert nanoseconds to seconds
 
         # Parameters
         ticks_per_revolution = 1440  # Your encoder's CPR
@@ -76,7 +85,6 @@ class HolonomicOdomPublisher(Node):
         self.last_wheel_data = wheel_data
 
         # Holonomic robot velocity calculations (for mecanum or omni-wheels)
-        # Based on inverse kinematics equations for holonomic wheels
         vx = (delta_wheel[0] + delta_wheel[1] + delta_wheel[2] + delta_wheel[3]) / 4.0
         vy = (-delta_wheel[0] + delta_wheel[1] + delta_wheel[2] - delta_wheel[3]) / 4.0
         vth = (-delta_wheel[0] + delta_wheel[1] - delta_wheel[2] + delta_wheel[3]) / (
@@ -98,10 +106,10 @@ class HolonomicOdomPublisher(Node):
         return self.x, self.y, self.th, vx, vy, vth
 
     def publish_odometry(self):
-        # Read the wheel data
+        # Read encoder data from Arduino
         wheel_data = self.read_wheel_data()
         if wheel_data is None:
-            return
+            return  # Skip if no data is received
 
         # Compute the odometry
         x, y, th, vx, vy, vth = self.compute_holonomic_odometry(wheel_data)
@@ -125,7 +133,7 @@ class HolonomicOdomPublisher(Node):
         odom.pose.pose.orientation.w = odom_quat[3]
 
         # Set the velocity
-        odom.child_frame_id = 'base_link'
+        odom.child_frame_id = 'base_footprint'
         odom.twist.twist.linear.x = vx
         odom.twist.twist.linear.y = vy
         odom.twist.twist.angular.z = vth
@@ -133,18 +141,63 @@ class HolonomicOdomPublisher(Node):
         # Publish the message
         self.odom_pub.publish(odom)
 
+        # Broadcast the dynamic transform (odom -> base_link)
+        self.broadcast_dynamic_tf(x, y, th)
+
+    def broadcast_dynamic_tf(self, x, y, th):
+        t = TransformStamped()
+        t.header.stamp = self.get_clock().now().to_msg()
+        t.header.frame_id = 'odom'
+        t.child_frame_id = 'base_footprint'
+        t.transform.translation.x = x
+        t.transform.translation.y = y
+        t.transform.translation.z = 0.0
+        quat = quaternion_from_euler(0, 0, th)
+        t.transform.rotation.x = quat[0]
+        t.transform.rotation.y = quat[1]
+        t.transform.rotation.z = quat[2]
+        t.transform.rotation.w = quat[3]
+
+        self.tf_broadcaster.sendTransform(t)
+
+    def broadcast_static_tf(self):
+        static_transform_stamped = TransformStamped()
+
+        static_transform_stamped.header.stamp = self.get_clock().now().to_msg()
+        static_transform_stamped.header.frame_id = 'base_footprint'
+        static_transform_stamped.child_frame_id = 'laser'
+
+        # Assuming the laser is 6 cm above the base_link
+        static_transform_stamped.transform.translation.x = 0.0
+        static_transform_stamped.transform.translation.y = 0.0
+        static_transform_stamped.transform.translation.z = 0.06
+
+        # No rotation between base_link and laser
+        quat = quaternion_from_euler(0, 0, 0)
+        static_transform_stamped.transform.rotation.x = quat[0]
+        static_transform_stamped.transform.rotation.y = quat[1]
+        static_transform_stamped.transform.rotation.z = quat[2]
+        static_transform_stamped.transform.rotation.w = quat[3]
+
+        self.static_tf_broadcaster.sendTransform(static_transform_stamped)
+
+    def update_odometry(self):
+        self.publish_odometry()
+
+
 def main(args=None):
     rclpy.init(args=args)
 
-    holonomic_odom_publisher = HolonomicOdomPublisher()
+    mecanum_odometry = MecanumOdometry()
 
     try:
-        rclpy.spin(holonomic_odom_publisher)
+        rclpy.spin(mecanum_odometry)
     except KeyboardInterrupt:
         pass
 
-    holonomic_odom_publisher.destroy_node()
+    mecanum_odometry.destroy_node()
     rclpy.shutdown()
+
 
 if __name__ == '__main__':
     main()
