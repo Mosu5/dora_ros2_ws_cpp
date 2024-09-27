@@ -20,7 +20,7 @@ class MecanumOdometry(Node):
         self.wheel_base_width = 0.362  # 36.2 cm base width
 
         # Serial communication settings (adjust port and baudrate)
-        self.port = self.declare_parameter('port', '/dev/ttyUSB0').value  # Update to your actual Arduino port
+        self.port = self.declare_parameter('port', '/dev/ttyS0').value  # Update to your actual Arduino port
         self.baudrate = self.declare_parameter('baudrate', 9600).value  # Adjust baudrate to match Arduino
 
         # Open the serial connection to Arduino
@@ -56,6 +56,8 @@ class MecanumOdometry(Node):
         try:
             if self.ser.in_waiting > 0:  # Check if data is available
                 line = self.ser.readline().decode('utf-8').strip()  # Read and decode the serial data
+                 # Debugging output to help understand what is being read
+                self.get_logger().info(f"Raw serial data: {line}")
                 wheel_data = [int(x) for x in line.split(',')]  # Convert the received string to integers
                 return wheel_data
             else:

@@ -11,7 +11,7 @@ def generate_launch_description():
             output='screen',
             parameters=[
                 {'port': '/dev/ttyS0'},   # Serial port for Arduino
-                {'baudrate': 115200},       # Baudrate for the serial communication
+                {'baudrate': 9600},       # Baudrate for the serial communication
                 {'wheel_radius': 0.08},     # Wheel radius in meters
                 {'wheel_base_length': 0.153}, # Wheel base length in meters
                 {'wheel_base_width': 0.362},  # Wheel base width in meters
