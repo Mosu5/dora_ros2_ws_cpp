@@ -1,0 +1,116 @@
+[0.000000] (-) TimerEvent: {}
+[0.002030] (-) JobUnselected: {'identifier': 'my_package'}
+[0.002558] (-) JobUnselected: {'identifier': 'rplidar_ros'}
+[0.003707] (-) JobUnselected: {'identifier': 'serial_coms'}
+[0.003821] (-) JobUnselected: {'identifier': 'velocity_controller'}
+[0.003905] (-) JobUnselected: {'identifier': 'wheel_controller'}
+[0.003993] (encoder_odometry) JobQueued: {'identifier': 'encoder_odometry', 'dependencies': OrderedDict()}
+[0.004084] (encoder_odometry) JobStarted: {'identifier': 'encoder_odometry'}
+[0.097631] (-) TimerEvent: {}
+[0.199302] (-) TimerEvent: {}
+[0.301109] (-) TimerEvent: {}
+[0.403608] (-) TimerEvent: {}
+[0.504926] (-) TimerEvent: {}
+[0.606696] (-) TimerEvent: {}
+[0.708345] (-) TimerEvent: {}
+[0.809812] (-) TimerEvent: {}
+[0.911516] (-) TimerEvent: {}
+[1.012895] (-) TimerEvent: {}
+[1.114391] (-) TimerEvent: {}
+[1.215818] (-) TimerEvent: {}
+[1.317704] (-) TimerEvent: {}
+[1.419226] (-) TimerEvent: {}
+[1.520122] (-) TimerEvent: {}
+[1.621005] (-) TimerEvent: {}
+[1.722468] (-) TimerEvent: {}
+[1.824118] (-) TimerEvent: {}
+[1.925778] (-) TimerEvent: {}
+[2.027407] (-) TimerEvent: {}
+[2.129150] (-) TimerEvent: {}
+[2.231769] (-) TimerEvent: {}
+[2.333158] (-) TimerEvent: {}
+[2.434564] (-) TimerEvent: {}
+[2.536550] (-) TimerEvent: {}
+[2.638116] (-) TimerEvent: {}
+[2.739583] (-) TimerEvent: {}
+[2.840704] (-) TimerEvent: {}
+[2.941751] (-) TimerEvent: {}
+[3.042519] (-) TimerEvent: {}
+[3.143520] (-) TimerEvent: {}
+[3.244795] (-) TimerEvent: {}
+[3.345680] (-) TimerEvent: {}
+[3.447304] (-) TimerEvent: {}
+[3.549676] (-) TimerEvent: {}
+[3.651326] (-) TimerEvent: {}
+[3.752533] (-) TimerEvent: {}
+[3.853407] (-) TimerEvent: {}
+[3.954522] (-) TimerEvent: {}
+[4.055402] (-) TimerEvent: {}
+[4.157787] (-) TimerEvent: {}
+[4.214691] (encoder_odometry) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', 'setup.py', 'egg_info', '--egg-base', '../build/encoder_odometry', 'build', '--build-base', '/home/dora/robot_ws/src/build/encoder_odometry/build', 'install', '--record', '/home/dora/robot_ws/src/build/encoder_odometry/install.log', '--single-version-externally-managed', 'install_data'], 'cwd': '/home/dora/robot_ws/src/encoder_odometry', 'env': {'LESSOPEN': '| /usr/bin/lesspipe %s', 'USER': 'dora', 'SSH_CLIENT': '192.168.91.127 58306 22', 'LC_TIME': 'nl_NL.UTF-8', 'XDG_SESSION_TYPE': 'tty', 'SHLVL': '1', 'LD_LIBRARY_PATH': '/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/aarch64-linux-gnu:/opt/ros/humble/lib', 'MOTD_SHOWN': 'pam', 'HOME': '/home/dora', 'OLDPWD': '/home/dora/robot_ws', 'SSH_TTY': '/dev/pts/4', 'ROS_PYTHON_VERSION': '3', 'LC_MONETARY': 'nl_NL.UTF-8', 'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'ROS_DISTRO': 'humble', 'LOGNAME': 'dora', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'XDG_SESSION_CLASS': 'user', 'TERM': 'xterm-256color', 'XDG_SESSION_ID': '17', 'ROS_LOCALHOST_ONLY': '0', 'PATH': '/home/dora/.local/bin:/opt/ros/humble/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin', 'LC_ADDRESS': 'nl_NL.UTF-8', 'XDG_RUNTIME_DIR': '/run/user/1000', 'LANG': 'en_US.UTF-8', 'RWM_IMPLEMENTATION': 'rmw_fastrtps_cpp', 'LC_TELEPHONE': 'nl_NL.UTF-8', 'LS_COLORS': 'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:', 'AMENT_PREFIX_PATH': '/opt/ros/humble', 'SHELL': '/bin/bash', 'LC_NAME': 'nl_NL.UTF-8', 'LESSCLOSE': '/usr/bin/lesspipe %s %s', 'LC_MEASUREMENT': 'nl_NL.UTF-8', 'LC_IDENTIFICATION': 'nl_NL.UTF-8', 'PWD': '/home/dora/robot_ws/src/build/encoder_odometry', 'LC_ALL': 'en_US.UTF-8', 'SSH_CONNECTION': '192.168.91.127 58306 192.168.91.208 22', 'XDG_DATA_DIRS': '/usr/share/gnome:/usr/local/share:/usr/share:/var/lib/snapd/desktop', 'PYTHONPATH': '/home/dora/robot_ws/src/build/encoder_odometry/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/dora/robot_ws/src/install/encoder_odometry/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages', 'LC_NUMERIC': 'nl_NL.UTF-8', 'LC_PAPER': 'nl_NL.UTF-8', 'COLCON': '1'}, 'shell': False}
+[4.257968] (-) TimerEvent: {}
+[4.360478] (-) TimerEvent: {}
+[4.462661] (-) TimerEvent: {}
+[4.564821] (-) TimerEvent: {}
+[4.666574] (-) TimerEvent: {}
+[4.768487] (-) TimerEvent: {}
+[4.869960] (-) TimerEvent: {}
+[4.971305] (-) TimerEvent: {}
+[5.072707] (-) TimerEvent: {}
+[5.176351] (-) TimerEvent: {}
+[5.282215] (-) TimerEvent: {}
+[5.383745] (-) TimerEvent: {}
+[5.485151] (-) TimerEvent: {}
+[5.587132] (-) TimerEvent: {}
+[5.688994] (-) TimerEvent: {}
+[5.790786] (-) TimerEvent: {}
+[5.892872] (-) TimerEvent: {}
+[5.995745] (-) TimerEvent: {}
+[6.097747] (-) TimerEvent: {}
+[6.200343] (-) TimerEvent: {}
+[6.304590] (-) TimerEvent: {}
+[6.366799] (encoder_odometry) StdoutLine: {'line': b'running egg_info\n'}
+[6.369511] (encoder_odometry) StdoutLine: {'line': b'creating ../build/encoder_odometry/encoder_odometry.egg-info\n'}
+[6.373678] (encoder_odometry) StdoutLine: {'line': b'writing ../build/encoder_odometry/encoder_odometry.egg-info/PKG-INFO\n'}
+[6.375237] (encoder_odometry) StdoutLine: {'line': b'writing dependency_links to ../build/encoder_odometry/encoder_odometry.egg-info/dependency_links.txt\n'}
+[6.378395] (encoder_odometry) StdoutLine: {'line': b'writing entry points to ../build/encoder_odometry/encoder_odometry.egg-info/entry_points.txt\n'}
+[6.381737] (encoder_odometry) StdoutLine: {'line': b'writing requirements to ../build/encoder_odometry/encoder_odometry.egg-info/requires.txt\n'}
+[6.382671] (encoder_odometry) StdoutLine: {'line': b'writing top-level names to ../build/encoder_odometry/encoder_odometry.egg-info/top_level.txt\n'}
+[6.383447] (encoder_odometry) StdoutLine: {'line': b"writing manifest file '../build/encoder_odometry/encoder_odometry.egg-info/SOURCES.txt'\n"}
+[6.390163] (encoder_odometry) StdoutLine: {'line': b"reading manifest file '../build/encoder_odometry/encoder_odometry.egg-info/SOURCES.txt'\n"}
+[6.391797] (encoder_odometry) StdoutLine: {'line': b"writing manifest file '../build/encoder_odometry/encoder_odometry.egg-info/SOURCES.txt'\n"}
+[6.396575] (encoder_odometry) StdoutLine: {'line': b'running build\n'}
+[6.401708] (encoder_odometry) StdoutLine: {'line': b'running build_py\n'}
+[6.408326] (-) TimerEvent: {}
+[6.413596] (encoder_odometry) StdoutLine: {'line': b'creating /home/dora/robot_ws/src/build/encoder_odometry/build\n'}
+[6.414475] (encoder_odometry) StdoutLine: {'line': b'creating /home/dora/robot_ws/src/build/encoder_odometry/build/lib\n'}
+[6.415053] (encoder_odometry) StdoutLine: {'line': b'creating /home/dora/robot_ws/src/build/encoder_odometry/build/lib/encoder_odometry\n'}
+[6.415616] (encoder_odometry) StdoutLine: {'line': b'copying encoder_odometry/__init__.py -> /home/dora/robot_ws/src/build/encoder_odometry/build/lib/encoder_odometry\n'}
+[6.416292] (encoder_odometry) StdoutLine: {'line': b'copying encoder_odometry/encoder_to_odom.py -> /home/dora/robot_ws/src/build/encoder_odometry/build/lib/encoder_odometry\n'}
+[6.416957] (encoder_odometry) StdoutLine: {'line': b'running install\n'}
+[6.417615] (encoder_odometry) StdoutLine: {'line': b'running install_lib\n'}
+[6.423647] (encoder_odometry) StdoutLine: {'line': b'creating /home/dora/robot_ws/src/install/encoder_odometry/lib/python3.10/site-packages/encoder_odometry\n'}
+[6.426794] (encoder_odometry) StdoutLine: {'line': b'copying /home/dora/robot_ws/src/build/encoder_odometry/build/lib/encoder_odometry/__init__.py -> /home/dora/robot_ws/src/install/encoder_odometry/lib/python3.10/site-packages/encoder_odometry\n'}
+[6.427511] (encoder_odometry) StdoutLine: {'line': b'copying /home/dora/robot_ws/src/build/encoder_odometry/build/lib/encoder_odometry/encoder_to_odom.py -> /home/dora/robot_ws/src/install/encoder_odometry/lib/python3.10/site-packages/encoder_odometry\n'}
+[6.428163] (encoder_odometry) StdoutLine: {'line': b'byte-compiling /home/dora/robot_ws/src/install/encoder_odometry/lib/python3.10/site-packages/encoder_odometry/__init__.py to __init__.cpython-310.pyc\n'}
+[6.428800] (encoder_odometry) StdoutLine: {'line': b'byte-compiling /home/dora/robot_ws/src/install/encoder_odometry/lib/python3.10/site-packages/encoder_odometry/encoder_to_odom.py to encoder_to_odom.cpython-310.pyc\n'}
+[6.429594] (encoder_odometry) StdoutLine: {'line': b'running install_data\n'}
+[6.430357] (encoder_odometry) StdoutLine: {'line': b'creating /home/dora/robot_ws/src/install/encoder_odometry/share/ament_index\n'}
+[6.431202] (encoder_odometry) StdoutLine: {'line': b'creating /home/dora/robot_ws/src/install/encoder_odometry/share/ament_index/resource_index\n'}
+[6.432316] (encoder_odometry) StdoutLine: {'line': b'creating /home/dora/robot_ws/src/install/encoder_odometry/share/ament_index/resource_index/packages\n'}
+[6.433120] (encoder_odometry) StdoutLine: {'line': b'copying resource/encoder_odometry -> /home/dora/robot_ws/src/install/encoder_odometry/share/ament_index/resource_index/packages\n'}
+[6.441833] (encoder_odometry) StdoutLine: {'line': b'copying package.xml -> /home/dora/robot_ws/src/install/encoder_odometry/share/encoder_odometry\n'}
+[6.445461] (encoder_odometry) StdoutLine: {'line': b'creating /home/dora/robot_ws/src/install/encoder_odometry/share/encoder_odometry/launch\n'}
+[6.446223] (encoder_odometry) StdoutLine: {'line': b'copying launch/robot_launch.py -> /home/dora/robot_ws/src/install/encoder_odometry/share/encoder_odometry/launch\n'}
+[6.447563] (encoder_odometry) StdoutLine: {'line': b'running install_egg_info\n'}
+[6.448275] (encoder_odometry) StdoutLine: {'line': b'Copying ../build/encoder_odometry/encoder_odometry.egg-info to /home/dora/robot_ws/src/install/encoder_odometry/lib/python3.10/site-packages/encoder_odometry-0.0.0-py3.10.egg-info\n'}
+[6.448931] (encoder_odometry) StdoutLine: {'line': b'running install_scripts\n'}
+[6.508603] (-) TimerEvent: {}
+[6.566599] (encoder_odometry) StdoutLine: {'line': b'Installing encoder_to_odom script to /home/dora/robot_ws/src/install/encoder_odometry/lib/encoder_odometry\n'}
+[6.569864] (encoder_odometry) StdoutLine: {'line': b"writing list of installed files to '/home/dora/robot_ws/src/build/encoder_odometry/install.log'\n"}
+[6.608989] (-) TimerEvent: {}
+[6.712761] (-) TimerEvent: {}
+[6.768584] (encoder_odometry) CommandEnded: {'returncode': 0}
+[6.813145] (-) TimerEvent: {}
+[6.894473] (encoder_odometry) JobEnded: {'identifier': 'encoder_odometry', 'rc': 0}
+[6.904080] (-) EventReactorShutdown: {}
