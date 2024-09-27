@@ -2,9 +2,8 @@
 
 import rclpy
 from rclpy.node import Node
-import serial  # To handle serial communication
 from nav_msgs.msg import Odometry
-from geometry_msgs.msg import TransformStamped, Quaternion
+from geometry_msgs.msg import TransformStamped
 from tf_transformations import quaternion_from_euler
 import math
 import tf2_ros
@@ -14,17 +13,10 @@ class MecanumOdometry(Node):
     def __init__(self):
         super().__init__('mecanum_odometry')
 
-        # Parameters
+        # Parameters (adjust these as needed)
         self.wheel_radius = 0.08  # 8 cm radius
         self.wheel_base_length = 0.153  # 15.3 cm base length
         self.wheel_base_width = 0.362  # 36.2 cm base width
-
-        # Serial communication settings (adjust port and baudrate)
-        self.port = self.declare_parameter('port', '/dev/ttyUSB0').value  # Update to your actual Arduino port
-        self.baudrate = self.declare_parameter('baudrate', 9600).value  # Adjust baudrate to match Arduino
-
-        # Open the serial connection to Arduino
-        self.ser = serial.Serial(self.port, self.baudrate, timeout=1)
 
         # Variables to store position and orientation
         self.x = 0.0
@@ -45,24 +37,15 @@ class MecanumOdometry(Node):
         # Timer to regularly call the update function
         self.create_timer(0.1, self.update_odometry)  # 10 Hz update rate
 
-        # Broadcast static transform from base_link to laser
+        # Broadcast static transform between base_link and laser
         self.broadcast_static_tf()
 
-    def read_wheel_data(self):
+    def generate_constant_wheel_data(self):
         """
-        Read encoder data from Arduino via serial communication.
-        The Arduino is expected to send data in the format: 'wheel1,wheel2,wheel3,wheel4\n'.
+        Simulate constant encoder data for all four wheels.
+        This is used for testing purposes.
         """
-        try:
-            if self.ser.in_waiting > 0:  # Check if data is available
-                line = self.ser.readline().decode('utf-8').strip()  # Read and decode the serial data
-                wheel_data = [int(x) for x in line.split(',')]  # Convert the received string to integers
-                return wheel_data
-            else:
-                return None  # No data available
-        except Exception as e:
-            self.get_logger().error(f"Error reading serial data: {e}")
-            return None
+        return [100, 100, 100, 100]  # Simulated constant encoder ticks
 
     def compute_holonomic_odometry(self, wheel_data):
         """
@@ -78,7 +61,7 @@ class MecanumOdometry(Node):
         ticks_per_revolution = 1440  # Your encoder's CPR
         distance_per_tick = (2 * math.pi * self.wheel_radius) / ticks_per_revolution
 
-        # Calculate the delta encoder values
+        # Calculate the delta encoder values (assuming constant encoder values)
         delta_wheel = [
             (wheel_data[i] - self.last_wheel_data[i]) * distance_per_tick for i in range(4)
         ]
@@ -106,10 +89,8 @@ class MecanumOdometry(Node):
         return self.x, self.y, self.th, vx, vy, vth
 
     def publish_odometry(self):
-        # Read encoder data from Arduino
-        wheel_data = self.read_wheel_data()
-        if wheel_data is None:
-            return  # Skip if no data is received
+        # Generate constant simulated wheel data
+        wheel_data = self.generate_constant_wheel_data()
 
         # Compute the odometry
         x, y, th, vx, vy, vth = self.compute_holonomic_odometry(wheel_data)
@@ -161,13 +142,16 @@ class MecanumOdometry(Node):
         self.tf_broadcaster.sendTransform(t)
 
     def broadcast_static_tf(self):
+        """
+        Broadcast a static transform between base_link and laser, where the laser is 6 cm above base_link.
+        """
         static_transform_stamped = TransformStamped()
 
         static_transform_stamped.header.stamp = self.get_clock().now().to_msg()
         static_transform_stamped.header.frame_id = 'base_footprint'
         static_transform_stamped.child_frame_id = 'laser'
 
-        # Assuming the laser is 6 cm above the base_link
+        # Laser is 6 cm above base_link
         static_transform_stamped.transform.translation.x = 0.0
         static_transform_stamped.transform.translation.y = 0.0
         static_transform_stamped.transform.translation.z = 0.06
@@ -179,6 +163,7 @@ class MecanumOdometry(Node):
         static_transform_stamped.transform.rotation.z = quat[2]
         static_transform_stamped.transform.rotation.w = quat[3]
 
+        # Publish the static transform
         self.static_tf_broadcaster.sendTransform(static_transform_stamped)
 
     def update_odometry(self):

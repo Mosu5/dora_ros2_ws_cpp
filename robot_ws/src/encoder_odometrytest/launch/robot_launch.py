@@ -5,7 +5,7 @@ def generate_launch_description():
     return LaunchDescription([
         # Odometry node for holonomic robot
         Node(
-            package='encoder_odometry',
+            package='encoder_odometrytest',
             executable='encoder_to_odom',
             name='encoder_to_odom',
             output='screen',
