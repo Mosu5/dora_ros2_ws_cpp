@@ -100,7 +100,7 @@ class WheelController(Node):
         odom = Odometry()
         odom.header.stamp = current_time.to_msg()
         odom.header.frame_id = 'odom'
-        odom.child_frame_id = 'base_footprint'
+        odom.child_frame_id = 'base_link'
 
         odom.pose.pose.position.x = x
         odom.pose.pose.position.y = y
@@ -122,7 +122,7 @@ class WheelController(Node):
         t = TransformStamped()
         t.header.stamp = self.get_clock().now().to_msg()
         t.header.frame_id = 'odom'
-        t.child_frame_id = 'base_footprint'
+        t.child_frame_id = 'base_link'
 
         # Set translation
         t.transform.translation.x = x
@@ -172,7 +172,7 @@ class WheelController(Node):
         static_transform_stamped = TransformStamped()
 
         static_transform_stamped.header.stamp = self.get_clock().now().to_msg()
-        static_transform_stamped.header.frame_id = 'base_footprint'
+        static_transform_stamped.header.frame_id = 'base_link'
         static_transform_stamped.child_frame_id = 'laser'
 
         # Laser is 6 cm above base_link

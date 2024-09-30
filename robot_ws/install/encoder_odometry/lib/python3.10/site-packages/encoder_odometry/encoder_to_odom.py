@@ -11,8 +11,8 @@ import tf2_ros
 
 
 class MecanumOdometry(Node):
-    def _init_(self):
-        super()._init_('mecanum_odometry')
+    def __init__(self):
+        super().__init__('mecanum_odometry')
 
         # Parameters
         self.wheel_radius = 0.08  # 8 cm radius
@@ -56,6 +56,8 @@ class MecanumOdometry(Node):
         try:
             if self.ser.in_waiting > 0:  # Check if data is available
                 line = self.ser.readline().decode('utf-8').strip()  # Read and decode the serial data
+                print(line)
+                return
                 wheel_data = [int(x) for x in line.split(',')]  # Convert the received string to integers
                 return wheel_data
             else:
@@ -201,3 +203,4 @@ def main(args=None):
 
 if __name__ == '__main__':
     main()
+

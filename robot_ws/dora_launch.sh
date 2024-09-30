@@ -12,24 +12,20 @@ echo "Running Wheel Controller..."
 ros2 run wheel_controller wheel_controller &
 wheel_controller_pid=$!
 
+
+# Wait a short time to ensure all nodes are up before running wheel controller
+sleep 10
+
 echo "Launching RPLIDAR..."
 ros2 launch rplidar_ros rplidar_a2m8_launch.py &
 rplidar_pid=$!
 
-# Wait a short time to ensure all nodes are up before running wheel controller
-sleep 5
-
-
-# Launch ROS2 nodes in the background with proper handling
-echo "Launching SLAM Toolbox..."
-ros2 launch slam_toolbox online_async_launch.py &
-slam_pid=$!
 
 # Function to handle cleanup when script is interrupted or exits
 cleanup() {
     echo "Stopping all processes..."
-    kill $slam_pid $encoder_pid $rplidar_pid $wheel_controller_pid
-    wait $slam_pid $encoder_pid $rplidar_pid $wheel_controller_pid 2>/dev/null
+    kill $encoder_pid $rplidar_pid $wheel_controller_pid
+    wait $encoder_pid $rplidar_pid $wheel_controller_pid 2>/dev/null
     echo "All processes stopped."
 }
 

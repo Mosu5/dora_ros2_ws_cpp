@@ -10,7 +10,7 @@ def generate_launch_description():
             name='encoder_to_odom',
             output='screen',
             parameters=[
-                {'port': '/dev/ttyS0'},   # Serial port for Arduino
+                {'port': '/dev/ttyS5'},   # Serial port for Arduino
                 {'baudrate': 9600},       # Baudrate for the serial communication
                 {'wheel_radius': 0.08},     # Wheel radius in meters
                 {'wheel_base_length': 0.153}, # Wheel base length in meters
@@ -30,3 +30,4 @@ def generate_launch_description():
         #     parameters=[{'use_sim_time': False}],
         # ),
     ])
+
