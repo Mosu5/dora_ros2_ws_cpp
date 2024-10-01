@@ -90,11 +90,11 @@ class WheelController(Node):
 
     def publish_odometry(self):
         """ Publish the odometry message and broadcast the TF """
-        wheel_data = self.read_wheel_data()
-        if wheel_data is None:
+        if self.last_wheel_data is None:
             return
 
-        x, y, th, vx, vy, vth = self.compute_holonomic_odometry(wheel_data)
+        x, y, th, vx, vy, vth = self.compute_holonomic_odometry(self.last_wheel_data)
+        self.get_logger().info(f'Hol. odom: x: {x:.2f}, y: {y:.2f}, th: {th:.2f} (rad)')
         current_time = self.get_clock().now()
 
         odom = Odometry()
@@ -192,6 +192,14 @@ class WheelController(Node):
 
     def update_odometry(self):
         """ Regular update of odometry information """
+        # Read wheel data
+        wheel_data = self.read_wheel_data()
+        if wheel_data is not None:
+            self.last_wheel_data = wheel_data
+        
+
+            
+        # Publish odometry based on last wheel data
         self.publish_odometry()
 
 
