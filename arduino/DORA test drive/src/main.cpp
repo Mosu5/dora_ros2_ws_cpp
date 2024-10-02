@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <PID_v1.h>
+#include <Arduino_FreeRTOS.h>
 
 #define CPR 1440 // Encoder counts per revolution;
 
@@ -33,6 +34,10 @@ PID pids[4] = {
     PID(&input[2], &output[2], &setpoint[2], kp, ki, kd, DIRECT),
     PID(&input[3], &output[3], &setpoint[3], kp, ki, kd, DIRECT)};
 
+// Task Handles
+TaskHandle_t PIDTaskHandle = NULL;
+TaskHandle_t SerialTaskHandle = NULL;
+
 // Function to handle changes on both channels of the encoder
 void handleEncoderChange(int encoderIndex, volatile long &encoderPosition)
 {
@@ -46,11 +51,11 @@ void handleEncoderChange(int encoderIndex, volatile long &encoderPosition)
     // Inverted direction
     if (a == b)
     {
-      encoderPosition--; // Reverse
+      encoderPosition++; // Reverse
     }
     else
     {
-      encoderPosition++; // Forward
+      encoderPosition--; // Forward
     }
   }
   else
@@ -58,11 +63,11 @@ void handleEncoderChange(int encoderIndex, volatile long &encoderPosition)
     // Normal direction
     if (a == b)
     {
-      encoderPosition++; // Forward
+      encoderPosition--; // Forward
     }
     else
     {
-      encoderPosition--; // Reverse
+      encoderPosition++; // Reverse
     }
   }
 }
@@ -200,6 +205,46 @@ void sendEncoderData()
   Serial.println(encoderPosition4);
 }
 
+// PID Control Task
+void PIDControlTask(void *pvParameters)
+{
+  (void)pvParameters;
+
+  for (;;)
+  {
+    // Check if data is available from Raspberry Pi
+    if (Serial.available() > 0)
+    {
+      String readLine = Serial.readStringUntil('\n');
+      const char *data = readLine.c_str();
+      // Serial.println(data); // Echo back the received data for debugging
+      parseWheelVelocities(data);
+
+      // Read encoders and update PID control
+      for (int i = 0; i < 4; i++)
+      {
+        input[i] = calculateCurrentSpeed(i); // Calculate speed based on encoder position
+        pids[i].Compute();                   // Update PID control
+        setMotorSpeed(i, output[i]);         // Apply PID output to motor
+      }
+    }
+    vTaskDelay(100 / portTICK_PERIOD_MS); // Delay for 100 ms
+  }
+}
+// Serial Communication Task
+void SerialTask(void *pvParameters)
+{
+  (void)pvParameters;
+
+  for (;;)
+  {
+    // Send raw encoder data back to Raspberry Pi
+    sendEncoderData();
+
+    vTaskDelay(500 / portTICK_PERIOD_MS); // Delay for 500 ms
+  }
+}
+
 void setup()
 {
   Serial.begin(9600); // USB Communication
@@ -221,28 +266,15 @@ void setup()
   attachInterrupt(digitalPinToInterrupt(encoderPinsA[1]), encoder2ISR, CHANGE);
   attachInterrupt(digitalPinToInterrupt(encoderPinsA[2]), encoder3ISR, CHANGE);
   attachInterrupt(digitalPinToInterrupt(encoderPinsA[3]), encoder4ISR, CHANGE);
+
+  // Create tasks
+  xTaskCreate(PIDControlTask, "PID Control Task", 128, NULL, 1, &PIDTaskHandle);
+  xTaskCreate(SerialTask, "Serial Task", 128, NULL, 1, &SerialTaskHandle);
+
+  // Start the scheduler
+  vTaskStartScheduler();
 }
 
 void loop()
 {
-  // Check if data is available from Raspberry Pi
-  if (Serial.available() > 0)
-  {
-    String readLine = Serial.readStringUntil('\n');
-    const char *data = readLine.c_str();
-    // Serial.println(data); // Echo back the received data for debugging
-    parseWheelVelocities(data);
-
-    // Read encoders and update PID control
-    for (int i = 0; i < 4; i++)
-    {
-      input[i] = calculateCurrentSpeed(i); // Calculate speed based on encoder position
-      pids[i].Compute();                   // Update PID control
-      setMotorSpeed(i, output[i]);         // Apply PID output to motor
-    }
-    // Send raw encoder data back to Raspberry Pi
-    sendEncoderData();
-  }
-
-  delay(200); // Slow down the output for readability
 }
