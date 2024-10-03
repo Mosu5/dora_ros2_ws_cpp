@@ -22,6 +22,8 @@ setup(
         'console_scripts': [
             'talker = py_pubsub.minimal_publisher:main',
             'listener = py_pubsub.minimal_subscriber:main',
+            'service = py_pubsub.minimal_service:main',
+            'client = py_pubsub.minimal_client_async:main',
         ],
     },
 )
