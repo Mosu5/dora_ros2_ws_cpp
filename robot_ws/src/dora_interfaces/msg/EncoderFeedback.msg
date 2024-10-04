@@ -1,4 +1,2 @@
-int32 encoder1_position
-int32 encoder2_position
-int32 encoder3_position
-int32 encoder4_position
+# wheel encoder positions (4 in total)
+int32[4] encoder_positions 
