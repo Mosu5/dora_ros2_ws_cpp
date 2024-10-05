@@ -18,6 +18,11 @@ class SerialNode(Node):
         # Serial communication settings
         # self.serial_port = serial.Serial('/dev/ttyS0', 9600, timeout=1)
         
+        # Parameters for wheel base and odometry
+        self.wheel_radius = 0.08  # meters (radius of the wheels)
+        self.wheel_base_length = 0.153  # meters (length between front and rear wheels)
+        self.wheel_base_width = 0.362  # meters (width between left and right wheels)
+        
         
         # TODO: Change the callback function to read encoder data from the robot 
         # and publish the last read data to the 'encoder_feedback' topic
@@ -28,12 +33,36 @@ class SerialNode(Node):
     
         # TODO: add cmd_vel_callback
         # Subscriber for cmd_vel
-        # self.cmd_vel_sub = self.create_subscription(
-        #     Twist,
-        #     'cmd_vel',
-        #     self.cmd_vel_callback,
-        #     10
-        # )
+        self.cmd_vel_sub = self.create_subscription(
+            Twist,
+            'cmd_vel',
+            self.cmd_vel_callback,
+            10
+        )
+        
+    def cmd_vel_callback(self, msg: Twist):
+        """ Handle incoming cmd_vel messages and send wheel velocities """
+        vx = msg.linear.x
+        vy = msg.linear.y
+        wz = msg.angular.z
+
+        v_fl, v_fr, v_rl, v_rr = self.compute_wheel_velocities(vx, vy, wz)
+
+        self.get_logger().info(f'FL: {v_fl:.2f}, FR: {v_fr:.2f}, RL: {v_rl:.2f}, RR: {v_rr:.2f} (rad/s)')
+        # self.serial_port.write(f'{v_fl:.2f},{v_fr:.2f},{v_rl:.2f},{v_rr:.2f}\n'.encode())
+        
+    def compute_wheel_velocities(self, vx, vy, wz):
+        """ Compute the individual wheel velocities for a mecanum drive """
+        L = self.wheel_base_length
+        W = self.wheel_base_width
+        r = self.wheel_radius
+
+        v_fl = (1 / r) * (vx - vy - (L + W) * wz)
+        v_fr = (1 / r) * (vx + vy + (L + W) * wz)
+        v_rl = (1 / r) * (vx + vy - (L + W) * wz)
+        v_rr = (1 / r) * (vx - vy + (L + W) * wz)
+
+        return v_fl, v_fr, v_rl, v_rr
            
     def encoder_callback(self):
         msg = EncoderFeedback()                                           # CHANGE
