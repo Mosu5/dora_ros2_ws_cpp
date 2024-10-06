@@ -14,7 +14,8 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/EncoderFeedback.msg"
-  "srv/AddThreeInts.srv"
+  "msg/WheelVel.msg"
+  "action/WheelVelCalc.action"
 )
 
 if(BUILD_TESTING)

@@ -2,7 +2,7 @@ import rclpy
 from rclpy.action import ActionServer
 from rclpy.node import Node
 
-from dora_interfaces.action import WheelVelocities
+from dora_interfaces.action import WheelVelCalc
 
 
 class WheelVelActionServer(Node):
@@ -11,7 +11,7 @@ class WheelVelActionServer(Node):
         super().__init__('wheel_vel_action_server')
         self._action_server = ActionServer(
             self,
-            WheelVelocities,
+            WheelVelCalc,
             'wheel_velocities',
             self.execute_callback)
         
@@ -36,7 +36,7 @@ class WheelVelActionServer(Node):
         self.get_logger().info('Goal succeeded!')
         
         
-        result = WheelVelocities.Result()
+        result = WheelVelCalc.Result()
         result.wheel_velocities = wheel_vel
         return result
 
