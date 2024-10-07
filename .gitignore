@@ -1,0 +1,26 @@
+# Build directories
+robot_ws/build/**/colcon_command_prefix_setup_py.sh.env
+robot_ws/build/**/prefix_override/__pycache__/sitecustomize.cpython-310.pyc
+robot_ws/build/wheel_controller/build/lib/wheel_controller/wheel_controller.py
+
+# Install directories
+robot_ws/install/wheel_controller/lib/python3.10/site-packages/wheel_controller/wheel_controller.py
+robot_ws/install/wheel_controller/lib/python3.10/site-packages/wheel_controller/__pycache__/wheel_controller.cpython-310.pyc
+
+# Log directories
+robot_ws/log/latest_build
+robot_ws/log/build_*/**/*.log
+robot_ws/build/encoder_odometry/colcon_command_prefix_setup_py.sh.env
+robot_ws/build/encoder_odometry/prefix_override/__pycache__/sitecustomize.cpython-310.pyc
+robot_ws/build/encoder_odometrytest/colcon_command_prefix_setup_py.sh.env
+robot_ws/build/encoder_odometrytest/prefix_override/__pycache__/sitecustomize.cpython-310.pyc
+robot_ws/build/serial_coms/colcon_command_prefix_setup_py.sh.env
+robot_ws/build/serial_coms/prefix_override/__pycache__/sitecustomize.cpython-310.pyc
+robot_ws/build/velocity_controller/colcon_command_prefix_setup_py.sh.env
+robot_ws/build/velocity_controller/prefix_override/__pycache__/sitecustomize.cpython-310.pyc
+robot_ws/build/wheel_controller/colcon_command_prefix_setup_py.sh.env
+robot_ws/build/wheel_controller/build/lib/wheel_controller/wheel_controller.py
+robot_ws/build/wheel_controller/prefix_override/__pycache__/sitecustomize.cpython-310.pyc
+robot_ws/install/wheel_controller/lib/python3.10/site-packages/wheel_controller/wheel_controller.py
+robot_ws/install/wheel_controller/lib/python3.10/site-packages/wheel_controller/__pycache__/wheel_controller.cpython-310.pyc
+robot_ws/log/latest_build

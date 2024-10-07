@@ -8,9 +8,10 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "C:/Users/intij/GitHub/dora_ros2_ws/DORA test drive/include",
-                "C:/Users/intij/GitHub/dora_ros2_ws/DORA test drive/src",
-                "C:/Users/intij/GitHub/dora_ros2_ws/DORA test drive/.pio/libdeps/megaatmega2560/PID",
+                "C:/Users/intij/GitHub/dora_ros2_ws/arduino/DORA test drive/include",
+                "C:/Users/intij/GitHub/dora_ros2_ws/arduino/DORA test drive/src",
+                "C:/Users/intij/GitHub/dora_ros2_ws/arduino/DORA test drive/.pio/libdeps/megaatmega2560/FreeRTOS/src",
+                "C:/Users/intij/GitHub/dora_ros2_ws/arduino/DORA test drive/.pio/libdeps/megaatmega2560/PID",
                 "C:/Users/intij/.platformio/packages/framework-arduino-avr/cores/arduino",
                 "C:/Users/intij/.platformio/packages/framework-arduino-avr/variants/mega",
                 "C:/Users/intij/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
@@ -23,9 +24,10 @@
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "C:/Users/intij/GitHub/dora_ros2_ws/DORA test drive/include",
-                    "C:/Users/intij/GitHub/dora_ros2_ws/DORA test drive/src",
-                    "C:/Users/intij/GitHub/dora_ros2_ws/DORA test drive/.pio/libdeps/megaatmega2560/PID",
+                    "C:/Users/intij/GitHub/dora_ros2_ws/arduino/DORA test drive/include",
+                    "C:/Users/intij/GitHub/dora_ros2_ws/arduino/DORA test drive/src",
+                    "C:/Users/intij/GitHub/dora_ros2_ws/arduino/DORA test drive/.pio/libdeps/megaatmega2560/FreeRTOS/src",
+                    "C:/Users/intij/GitHub/dora_ros2_ws/arduino/DORA test drive/.pio/libdeps/megaatmega2560/PID",
                     "C:/Users/intij/.platformio/packages/framework-arduino-avr/cores/arduino",
                     "C:/Users/intij/.platformio/packages/framework-arduino-avr/variants/mega",
                     "C:/Users/intij/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
