@@ -22,7 +22,7 @@ class SerialNode(Node):
         # TODO: Change the callback function to read encoder data from the robot 
         # and publish the last read data to the 'encoder_feedback' topic
         # Timer for reading encoder feedback
-        timer_period = 0.5
+        timer_period = 0.1
         self.timer = self.create_timer(timer_period, self.encoder_callback)        
         self.publisher_ = self.create_publisher(EncoderFeedback, 'encoder_feedback', 10)     # CHANGE
     
@@ -50,6 +50,11 @@ class SerialNode(Node):
         # if no serial data is available, send random data
         # if self.read_wheel_data() is not None:
         msg.encoder_positions = self.read_wheel_data()
+        if msg.encoder_positions is None:
+            return
+        
+        self.get_logger().info(f"Encoder positions: {msg.encoder_positions}")
+ 
         # else:
             # msg.encoder_positions = random_encoder_positions()         # CHANGE
 
@@ -62,7 +67,16 @@ class SerialNode(Node):
             if self.serial_port.in_waiting > 0:
                 line = self.serial_port.readline().decode('utf-8').strip()
                 self.get_logger().info(f"Raw serial data: {line}")
-                wheel_data = [float(x) for x in line.split(',')]
+                # Clean the line by removing unwanted characters (like ':')
+                cleaned_data = line.replace(':', '').strip()
+
+                # Split the cleaned data by commas and convert to float
+                wheel_data = [float(x) for x in cleaned_data.split(',')]
+                
+                if len(wheel_data) != 4:
+                    self.get_logger().error(f"Invalid data received: {line}")
+                    return None 
+                
                 return wheel_data
             else:
                 return None
