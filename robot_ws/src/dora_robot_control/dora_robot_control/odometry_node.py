@@ -144,7 +144,7 @@ class OdometryNode(Node):
         static_transform_stamped.transform.translation.z = 0.06
 
         # No rotation between base_link and laser
-        quat = quaternion_from_euler(0, 0, 0)
+        quat = quaternion_from_euler(0, 0, math.pi/2)
         static_transform_stamped.transform.rotation.x = quat[0]
         static_transform_stamped.transform.rotation.y = quat[1]
         static_transform_stamped.transform.rotation.z = quat[2]
