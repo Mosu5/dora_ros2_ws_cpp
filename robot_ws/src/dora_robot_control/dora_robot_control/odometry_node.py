@@ -6,6 +6,7 @@ from tf_transformations import quaternion_from_euler
 
 import math
 import tf2_ros
+from std_msgs.msg import String
 
 from dora_interfaces.msg import EncoderFeedback   
 
@@ -31,7 +32,7 @@ class OdometryNode(Node):
         self.static_tf_broadcaster = tf2_ros.StaticTransformBroadcaster(self)
         
         self.subscription = self.create_subscription(
-            EncoderFeedback,                                              # CHANGE
+            String,                                              # CHANGE
             'encoder_feedback',                                           # CHANGE
             self.publish_odometry_callback,
             10)
@@ -46,8 +47,15 @@ class OdometryNode(Node):
             
         self.get_logger().info(f"Received encoder data: {wheel_data}")
         
-
-
+        # convert the string to a list of floats
+        wheel_data = [float(x) for x in wheel_data.split(',')]
+        
+        # check for correct number of encoder values
+        if len(wheel_data) != 4:
+            self.get_logger().warn("Invalid number of encoder values")
+            return
+        
+        
         x, y, th, vx, vy, vth = self.compute_holonomic_odometry(wheel_data)
         self.get_logger().info(f"Odometry: x={x}, y={y}, th={th}, vx={vx}, vy={vy}, vth={vth}")
         current_time = self.get_clock().now()

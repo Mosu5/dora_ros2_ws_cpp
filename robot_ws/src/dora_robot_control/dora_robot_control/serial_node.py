@@ -6,6 +6,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist
 import serial
 import random
+from std_msgs.msg import String
 
 from dora_interfaces.msg import EncoderFeedback    # CHANGE
 from dora_interfaces.msg import WheelVel          # CHANGE
@@ -16,19 +17,27 @@ class SerialNode(Node):
         super().__init__('serial_node')
         
         # Serial communication settings
-        self.serial_port = serial.Serial('/dev/ttyS0', 9600, timeout=1)
-        
+        self.serial_port = serial.Serial('/dev/ttyS0', 9600, timeout=0.1) # changed timeout from 1 to 0.1 seconds
+        timer_period = 0.1        
                 
         # TODO: Change the callback function to read encoder data from the robot 
         # and publish the last read data to the 'encoder_feedback' topic
         # Timer for reading encoder feedback
-        timer_period = 0.1
+
         self.timer = self.create_timer(timer_period, self.encoder_callback)        
-        self.publisher_ = self.create_publisher(EncoderFeedback, 'encoder_feedback', 10)     # CHANGE
+        # self.publisher_ = self.create_publisher(EncoderFeedback, 'encoder_feedback', 10)     # CHANGE
+        self.encoder_pub = self.create_publisher(String, 'encoder_feedback', 10)     # CHANGE
     
         # TODO: add cmd_vel_callback
         # Subscriber for cmd_vel
-        self.cmd_vel_sub = self.create_subscription(
+        # self.cmd_vel_sub = self.create_subscription(
+        #     WheelVel,
+        #     'wheel_vel',
+        #     self.wheel_vel_callback,
+        #     10
+        # )
+        
+        self.wheel_vel_sub = self.create_subscription(
             WheelVel,
             'wheel_vel',
             self.wheel_vel_callback,
@@ -38,10 +47,20 @@ class SerialNode(Node):
     def wheel_vel_callback(self, msg: WheelVel):
         """ Callback function for receiving wheel velocities """
         self.get_logger().info('Result callback triggered')
-        v_fl, v_fr, v_rl, v_rr = msg.wheel_velocities
-        self.get_logger().info(f'FL: {v_fl:.2f}, FR: {v_fr:.2f}, RL: {v_rl:.2f}, RR: {v_rr:.2f} (rad/s)')
+        # Get the wheel velocities from the message
+        wheel_velocities = msg.wheel_velocities
+        
         # Send wheel velocities to the robot via serial communication
-        self.serial_port.write(f'{v_fl:.2f},{v_fr:.2f},{v_rl:.2f},{v_rr:.2f}\n'.encode('utf-8'))
+        self.get_logger().info(f"Sending wheel velocities: {wheel_velocities}")
+        self.serial_port.write(f"{wheel_velocities}\n".encode())
+        
+    def write_to_serial(self, data):
+        """ Write data to the serial port """
+        with serial.Serial('/dev/ttyS0', 9600, timeout=0.1) as ser:
+            ser.write(data.encode())
+            self.get_logger().info(f"Data sent: {data}")
+            ser.close()
+            
            
     def encoder_callback(self):
         msg = EncoderFeedback()                                           # CHANGE
@@ -49,8 +68,8 @@ class SerialNode(Node):
         # send encoder data to the robot
         # if no serial data is available, send random data
         # if self.read_wheel_data() is not None:
-        msg.encoder_positions = self.read_wheel_data()
-        if msg.encoder_positions is None:
+        encoder_positions = self.read_wheel_data()
+        if encoder_positions is None:
             return
         
         self.get_logger().info(f"Encoder positions: {msg.encoder_positions}")
