@@ -2,7 +2,7 @@ import os
 from glob import glob
 from setuptools import find_packages, setup
 
-package_name = 'dora_robot_control'
+package_name = 'dora_robot'
 
 setup(
     name=package_name,
@@ -23,10 +23,6 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'serial_node = dora_robot_control.serial_node:main',
-            'odometry_node = dora_robot_control.odometry_node:main',
-            'wheel_vel_action_server = dora_robot_control.wheel_vel_action_server:main',
-            'wheel_vel_action_client = dora_robot_control.wheel_vel_action_client:main',
         ],
     },
 )

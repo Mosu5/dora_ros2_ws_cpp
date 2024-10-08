@@ -8,29 +8,14 @@ echo "Setting permissions for /dev/ttyS0 and /dev/ttyUSB0..."
 sudo chmod 666 /dev/ttyS0
 sudo chmod 666 /dev/ttyUSB0
 
-echo "Running Wheel Controller..."
-ros2 run wheel_controller wheel_controller &
-wheel_controller_pid=$!
+# Build the workspace
+echo "Building workspace..."
+colcon build
 
+# Source the workspace
+echo "Sourcing workspace..."
+source install/setup.bash
 
-# Wait a short time to ensure all nodes are up before running wheel controller
-sleep 10
-
-echo "Launching RPLIDAR..."
-ros2 launch rplidar_ros rplidar_a2m8_launch.py &
-rplidar_pid=$!
-
-
-# Function to handle cleanup when script is interrupted or exits
-cleanup() {
-    echo "Stopping all processes..."
-    kill $encoder_pid $rplidar_pid $wheel_controller_pid
-    wait $encoder_pid $rplidar_pid $wheel_controller_pid 2>/dev/null
-    echo "All processes stopped."
-}
-
-# Trap script termination (e.g., Ctrl+C) to call cleanup
-trap cleanup EXIT
-
-# Wait for all background processes to complete
-wait
+# Launch the robot
+echo "Launching dora_robot..."
+ros2 launch dora_robot dora_robot_launch.py 
