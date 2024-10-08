@@ -1,67 +1,119 @@
 #include "Car.h"
 
-
 Car::Car()
-    : topLeftWheel(topLeftWheelMoterPin1, topLeftWheelMoterPin2, topLeftWheelSpeedControlPin,
-                   topLeftWheelInterruptEncoderPin, topLeftWheelConfermationEncoderPin,
-                   topLeftWheelKp, topLeftWheelKi, topLeftWheelKd, topLeftWheelSetpoint),
-
-      topRightWheel(topRightWheelMoterPin1, topRightWheelMoterPin2, topRightWheelSpeedControlPin,
-                    topRightWheelInterruptEncoderPin, topRightWheelConfermationEncoderPin,
-                    topRightWheelKp, topRightWheelKi, topRightWheelKd, topRightWheelSetpoint),
-
-      bottomLeftWheel(bottomLeftWheelMoterPin1, bottomLeftWheelMoterPin2, bottomLeftWheelSpeedControlPin,
-                      bottomLeftWheelInterruptEncoderPin, bottomLeftWheelConfermationEncoderPin,
-                      bottomLeftWheelKp, bottomLeftWheelKi, bottomLeftWheelKd, bottomLeftWheelSetpoint),
-
-      bottomRightWheel(bottomRightWheelMoterPin1, bottomRightWheelMoterPin2, bottomRightWheelSpeedControlPin,
-                       bottomRightWheelInterruptEncoderPin, bottomRightWheelConfermationEncoderPin,
-                       bottomRightWheelKp, bottomRightWheelKi, bottomRightWheelKd, bottomRightWheelSetpoint)
+    : topLeftWheel(nullptr), topRightWheel(nullptr), bottomLeftWheel(nullptr), bottomRightWheel(nullptr)
 {
 }
 
+void Car::init()
+{
+    topLeftWheel = new Wheel(topLeftWheelSpeedControlPin, topLeftWheelMoterPin1, topLeftWheelMoterPin2,
+                             topLeftWheelInterruptEncoderPinA, topLeftWheelConfermationEncoderPinB,
+                             topLeftWheelKp, topLeftWheelKi, topLeftWheelKd);
+    topRightWheel = new Wheel(topRightWheelSpeedControlPin, topRightWheelMoterPin1, topRightWheelMoterPin2,
+                              topRightWheelInterruptEncoderPinA, topRightWheelConfermationEncoderPinB,
+                              topRightWheelKp, topRightWheelKi, topRightWheelKd);
+    bottomLeftWheel = new Wheel(bottomLeftWheelSpeedControlPin, bottomLeftWheelMoterPin1, bottomLeftWheelMoterPin2,
+                                bottomLeftWheelInterruptEncoderPinA, bottomLeftWheelConfermationEncoderPinB,
+                                bottomLeftWheelKp, bottomLeftWheelKi, bottomLeftWheelKd);
+    bottomRightWheel = new Wheel(bottomRightWheelSpeedControlPin, bottomRightWheelMoterPin1, bottomRightWheelMoterPin2,
+                                 bottomRightWheelInterruptEncoderPinA, bottomRightWheelConfermationEncoderPinB,
+                                 bottomRightWheelKp, bottomRightWheelKi, bottomRightWheelKd);
+
+    Serial.println("Car initialized");
+}
+
+void Car::Drive()
+{
+    // Serial.println("Driving...");
+    calculateCurrentSpeed();
+    PIDscompute();
+    topLeftWheel->SetServo();
+    topRightWheel->SetServo();
+    bottomLeftWheel->SetServo();
+    bottomRightWheel->SetServo();
+    // Serial.println("Driving done.");
+}
+
+void Car::calculateCurrentSpeed()
+{
+    topLeftWheel->CalculateCurrentSpeed();
+    topRightWheel->CalculateCurrentSpeed();
+    bottomLeftWheel->CalculateCurrentSpeed();
+    bottomRightWheel->CalculateCurrentSpeed();
+}
+
+void Car::PIDscompute()
+{
+    topLeftWheel->GetPID()->Compute();
+    topRightWheel->GetPID()->Compute();
+    bottomLeftWheel->GetPID()->Compute();
+    bottomRightWheel->GetPID()->Compute();
+}
+
+void Car::SetSetpoints(double topLeftWheelSetpoint, double topRightWheelSetpoint,
+                       double bottomLeftWheelSetpoint, double bottomRightWheelSetpoint)
+{
+    topLeftWheel->SetSetpoint(topLeftWheelSetpoint);
+    topRightWheel->SetSetpoint(topRightWheelSetpoint);
+    bottomLeftWheel->SetSetpoint(bottomLeftWheelSetpoint);
+    bottomRightWheel->SetSetpoint(bottomRightWheelSetpoint);
+}
+
+Car::WheelVelocities Car::GetEncoders()
+{
+    WheelVelocities encoders;
+    encoders.topLeft = topLeftWheel->GetEncoderPosition();
+    encoders.topRight = topRightWheel->GetEncoderPosition();
+    encoders.bottomLeft = bottomLeftWheel->GetEncoderPosition();
+    encoders.bottomRight = bottomRightWheel->GetEncoderPosition();
+
+    return encoders;
+}
+
+Wheel *Car::GetTopLeftWheel()
+{
+    return topLeftWheel;
+}
+
+Wheel *Car::GetTopRightWheel()
+{
+    return topRightWheel;
+}
+
+Wheel *Car::GetBottomLeftWheel()
+{
+    return bottomLeftWheel;
+}
+
+Wheel *Car::GetBottomRightWheel()
+{
+    return bottomRightWheel;
+}
+
+// TODO: Method to drive the car forward
 void Car::ForwardDrive()
 {
-    topLeftWheel.SetServo(1, 0);
-    topRightWheel.SetServo(1, 0);
-    bottomLeftWheel.SetServo(1, 0);
-    bottomRightWheel.SetServo(1, 0);
-
-    Serial.println("Forward Drive");
 }
 
+// TODO: Implement the ReverseDrive method
 void Car::ReverseDrive()
 {
-    topLeftWheel.SetServo(0, 1);
-    topRightWheel.SetServo(0, 1);
-    bottomLeftWheel.SetServo(0, 1);
-    bottomRightWheel.SetServo(0, 1);
-
-    Serial.println("Reverse Drive");
 }
 
-void Car::SidewaysDrive()
-{
-    topLeftWheel.SetServo(1, 0);
-    topRightWheel.SetServo(0, 1);
-    bottomLeftWheel.SetServo(1, 0);
-    bottomRightWheel.SetServo(0, 1);
-
-    Serial.println("Sideways Drive");
-}
-
-void Car::DiagonalDrive()
+// TODO: Implement the TurnLeft method
+void Car::TurnLeft()
 {
 }
 
-void Car::StopCar()
+// TODO: Implement the TurnRight method
+void Car::TurnRight()
 {
-    topLeftWheel.SetServo(0, 0);
-    topRightWheel.SetServo(0, 0);
-    bottomLeftWheel.SetServo(0, 0);
-    bottomRightWheel.SetServo(0, 0);
+}
 
-    Serial.println("Stop Car");
+// TODO: Implement the Stop method
+void Car::Stop()
+{
 }
 
 Car::~Car()
