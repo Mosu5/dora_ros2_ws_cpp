@@ -10,7 +10,7 @@ class WheelVelocityNode(Node):
         
         # Parameters for wheel base and odometry
         self.wheel_radius = 0.08  # meters (radius of the wheels)
-        self.wheel_base_length = 0.153  # meters (length between front and rear wheels)
+        self.wheel_base_length = 0.28  # meters (length between front and rear wheels)
         self.wheel_base_width = 0.362  # meters (width between left and right wheels)
         
         self.cmd_vel_sub = self.create_subscription(

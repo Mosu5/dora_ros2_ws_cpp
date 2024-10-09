@@ -8,15 +8,13 @@ import math
 import tf2_ros
 from std_msgs.msg import String
 
-from dora_interfaces.msg import EncoderFeedback   
-
 class OdometryNode(Node):
 
     def __init__(self):
         super().__init__('odometry_node')
         # Parameters for wheel base and odometry
         self.wheel_radius = 0.08  # meters (radius of the wheels)
-        self.wheel_base_length = 0.153  # meters (length between front and rear wheels)
+        self.wheel_base_length = 0.28  # meters (length between front and rear wheels)
         self.wheel_base_width = 0.362  # meters (width between left and right wheels)
         
         # Variables to store position and orientation
@@ -38,9 +36,9 @@ class OdometryNode(Node):
             10)
         self.subscription
 
-    def publish_odometry_callback(self, msg):
+    def publish_odometry_callback(self, msg: String):
         """ Publish the odometry message and broadcast the TF """
-        wheel_data = msg.encoder_positions
+        wheel_data = msg.data
         if wheel_data is None:
             return
             
@@ -161,9 +159,6 @@ class OdometryNode(Node):
 
         # Publish the static transform
         self.static_tf_broadcaster.sendTransform(static_transform_stamped)
-
-
-
 
 
 def main(args=None):
