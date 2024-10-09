@@ -58,7 +58,7 @@ class SerialNode(Node):
         self.get_logger().info(f"Encoder positions: {msg.data}")
         self.encoder_pub.publish(msg)
     
-    def read_serial_data(self):
+    def read_serial_data(self) -> str:
         """ Read encoder data from the robot via serial communication """
         try:
             if self.serial_port.in_waiting > 0:
@@ -67,13 +67,13 @@ class SerialNode(Node):
                 self.get_logger().info(f"Raw serial data: {data}")
                 return data
             else:
-                return None
+                return ""
         except serial.SerialException as e:
             self.get_logger().error(f"Serial exception: {e}")
-            return None
+            return ""
         except Exception as e:
             self.get_logger().error(f"Error reading serial data: {e}")
-            return None
+            return ""
 
 
 def main(args=None):

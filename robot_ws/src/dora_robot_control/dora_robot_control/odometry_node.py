@@ -39,7 +39,7 @@ class OdometryNode(Node):
     def publish_odometry_callback(self, msg: String):
         """ Publish the odometry message and broadcast the TF """
         wheel_data = msg.data
-        if wheel_data is None:
+        if wheel_data is None or wheel_data == '':
             return
             
             
@@ -81,7 +81,7 @@ class OdometryNode(Node):
         self.broadcast_static_tf()
         
 
-    def compute_holonomic_odometry(self, wheel_data):
+    def compute_holonomic_odometry(self, wheel_data: str):
         """ Compute the robot's odometry based on wheel encoder data """
         current_time = self.get_clock().now()
         delta_time = (current_time - self.last_time).nanoseconds / 1e9  # seconds
