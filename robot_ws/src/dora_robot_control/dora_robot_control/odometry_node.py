@@ -37,12 +37,10 @@ class OdometryNode(Node):
         self.subscription
 
     def publish_odometry_callback(self, msg: Float32MultiArray):
-        """ Publish the odometry message and broadcast the TF """
         encoder_data = msg.data
-        self.get_logger().info(f"Received processed data: {encoder_data}")
         
         x, y, th, vx, vy, vth = self.compute_holonomic_odometry(encoder_data)
-        self.get_logger().info(f"Odometry: x={x}, y={y}, th={th}, vx={vx}, vy={vy}, vth={vth}")
+        # self.get_logger().info(f"Odometry: x={x}, y={y}, th={th}, vx={vx}, vy={vy}, vth={vth}")
         current_time = self.get_clock().now()
 
         odom = Odometry()
@@ -68,7 +66,6 @@ class OdometryNode(Node):
         self.broadcast_static_tf()
 
     def compute_holonomic_odometry(self, wheel_data):
-        """ Compute the robot's odometry based on wheel encoder data """
         current_time = self.get_clock().now()
         delta_time = (current_time - self.last_time).nanoseconds / 1e9  # seconds
 
@@ -123,7 +120,6 @@ class OdometryNode(Node):
         
     def broadcast_static_tf(self):
         """
-        Broadcast a static transform between base_link and laser, where the laser is 6 cm above base_link.
         """
         static_transform_stamped = TransformStamped()
 
