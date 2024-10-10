@@ -24,3 +24,9 @@ robot_ws/build/wheel_controller/prefix_override/__pycache__/sitecustomize.cpytho
 robot_ws/install/wheel_controller/lib/python3.10/site-packages/wheel_controller/wheel_controller.py
 robot_ws/install/wheel_controller/lib/python3.10/site-packages/wheel_controller/__pycache__/wheel_controller.cpython-310.pyc
 robot_ws/log/latest_build
+
+.vscode/
+*.vscode/
+.vscode-server/
+.vscode-test/
+.idea/
