@@ -6,7 +6,7 @@ from tf_transformations import quaternion_from_euler
 
 import math
 import tf2_ros
-from std_msgs.msg import String
+from std_msgs.msg import Float32MultiArray
 
 class OdometryNode(Node):
 
@@ -30,31 +30,18 @@ class OdometryNode(Node):
         self.static_tf_broadcaster = tf2_ros.StaticTransformBroadcaster(self)
         
         self.subscription = self.create_subscription(
-            String,                                              # CHANGE
-            'encoder_feedback',                                           # CHANGE
+            Float32MultiArray,
+            'processed_data',
             self.publish_odometry_callback,
             10)
         self.subscription
 
-    def publish_odometry_callback(self, msg: String):
+    def publish_odometry_callback(self, msg: Float32MultiArray):
         """ Publish the odometry message and broadcast the TF """
-        wheel_data = msg.data
-        if wheel_data is None or wheel_data == '':
-            return
-            
-            
-        self.get_logger().info(f"Received encoder data: {wheel_data}")
+        encoder_data = msg.data
+        self.get_logger().info(f"Received processed data: {encoder_data}")
         
-        # convert the string to a list of floats
-        wheel_data = [float(x) for x in wheel_data.split(',')]
-        
-        # check for correct number of encoder values
-        if len(wheel_data) != 4:
-            self.get_logger().warn("Invalid number of encoder values")
-            return
-        
-        
-        x, y, th, vx, vy, vth = self.compute_holonomic_odometry(wheel_data)
+        x, y, th, vx, vy, vth = self.compute_holonomic_odometry(encoder_data)
         self.get_logger().info(f"Odometry: x={x}, y={y}, th={th}, vx={vx}, vy={vy}, vth={vth}")
         current_time = self.get_clock().now()
 
@@ -79,9 +66,8 @@ class OdometryNode(Node):
 
         self.broadcast_dynamic_tf(x, y, th)
         self.broadcast_static_tf()
-        
 
-    def compute_holonomic_odometry(self, wheel_data: str):
+    def compute_holonomic_odometry(self, wheel_data):
         """ Compute the robot's odometry based on wheel encoder data """
         current_time = self.get_clock().now()
         delta_time = (current_time - self.last_time).nanoseconds / 1e9  # seconds
@@ -160,14 +146,12 @@ class OdometryNode(Node):
         # Publish the static transform
         self.static_tf_broadcaster.sendTransform(static_transform_stamped)
 
-
 def main(args=None):
     rclpy.init(args=args)
     odometry_node = OdometryNode()
     rclpy.spin(odometry_node)
     odometry_node.destroy_node()
     rclpy.shutdown()
-
 
 if __name__ == '__main__':
     main()
