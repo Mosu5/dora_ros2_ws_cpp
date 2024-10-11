@@ -1,3 +1,6 @@
 [submodule "robot_ws/src/rplidar_ros"]
 	path = robot_ws/src/rplidar_ros
 	url = https://github.com/Slamtec/rplidar_ros.git
+[submodule "lib/serial"]
+	path = lib/serial
+	url = https://github.com/yan9a/serial.git
